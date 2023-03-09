@@ -1,0 +1,117 @@
+﻿@model Mark.Models.ModelViews.ToyVM;
+@{
+    var title = "Create Toy";
+}
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    @if (Model.toy.Id != 0)
+    {
+        title = "Edit Toy";
+        <input asp-for="toy.Id" hidden>
+    }
+    <div class="border p-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <h2 class="text-info pl-3">@title</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="toy.Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="toy.Name" class="form-control" />
+                        <span asp-validation-for="toy.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="toy.Price"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="toy.Price" class="form-control" />
+                        <span asp-validation-for="toy.Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="toy.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="toy.Description" class="form-control summernote"></textarea>
+                        <span asp-validation-for="toy.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group row">
+                    <div class="col-4">
+                        Image
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                    </div>
+                </div>
+                <br />
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="toy.CategoryId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="toy.CategoryId" asp-items="@Model.categoryList" class="form-control">
+                            <option disabled selected>--Select Category--</option>
+                        </select>
+                        <span asp-validation-for="toy.CategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            @if(Model.toy.Id!=0)
+                            {
+                                <input type="submit" class="btn btn-info w-100%" value="Update" />
+                            }
+                            else
+                            {
+                                <input type="submit" onclick="return validateInput()" class="btn btn-info w-100%" value="Create" />
+                            }
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-primary">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @*Keep this empty*@
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function() {
+            $('.summernote').summernote({
+                height:250
+            });
+        });
+        function validateInput(){
+            if(document.getElementById("uploadBox").value == ""){
+                Swal.fire(
+                    'Error',
+                    'Please upload an image!',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
