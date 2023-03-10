@@ -3,8 +3,8 @@
     var title = "Create Toy";
 }
 
-<form method="post" asp-action="Upsert" enctype="multipart/form-data">
-    @if (Model.toy.Id != 0)
+<form method="post"  enctype="multipart/form-data">
+    @if (Model.toy.Id!=0)
     {
         title = "Edit Toy";
         <input asp-for="toy.Id" hidden>
@@ -85,8 +85,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                @*Keep this empty*@
+            <div class="col-4 pt-4">
+                
+                <img src="@WC.ImagePath@Model.toy.Image" width="100%" style="border-radius:5px; border:1px solid:1px #bbb"
             </div>
         </div>
     </div>

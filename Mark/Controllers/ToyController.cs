@@ -3,16 +3,19 @@ using Mark.Models;
 using Mark.Models.ModelViews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mark.Controllers
 {
     public class ToyController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _webHostEnviroment;
 
-        public ToyController(ApplicationDbContext db)
+        public ToyController(ApplicationDbContext db, IWebHostEnvironment webHostEnviroment)
         {
             _db = db;
+            _webHostEnviroment = webHostEnviroment; 
         }
 
         public IActionResult Index()
@@ -27,12 +30,6 @@ namespace Mark.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            //IEnumerable<SelectListItem> categories = _db.categories.Select(i => new SelectListItem
-            //{
-            //    Text = i.Name,
-            //    Value=i.Id.ToString()
-            //}) ;
-            //Toy toy = new Toy();
             ToyVM toyVM = new ToyVM()
             {
                 toy =new Toy(),
@@ -44,13 +41,13 @@ namespace Mark.Controllers
             };
             if (id == null)  
             {
-                //this create 
+             
                 return View(toyVM);
             }
             else
             {
                 toyVM.toy = _db.toys.Find(id);
-                if(toyVM == null)
+                if(toyVM.toy== null)
                 {
                     return NotFound();
                 }
@@ -62,12 +59,50 @@ namespace Mark.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(ToyVM obj)
         {
-            if(ModelState.IsValid)
-            {
+            var files = HttpContext.Request.Form.Files;
+            string webRootPath = _webHostEnviroment.WebRootPath;
 
-                return RedirectToAction("Index");
+            if (obj.toy.Id == 0)
+            {
+                string upload = webRootPath + WC.ImagePath;
+                string fileName = Guid.NewGuid().ToString();
+                string extnsion = Path.GetExtension(files[0].FileName);
+
+                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extnsion), FileMode.Create))
+                {
+                    files[0].CopyTo(fileStream);
+                }
+                obj.toy.Image = fileName + extnsion;
+                _db.toys.Add(obj.toy);
+               
             }
-            return View(obj); 
+            else
+            {
+                var objDB = _db.toys.AsNoTracking().FirstOrDefault(u => u.Id == obj.toy.Id);
+                if (files.Count > 0)
+                {
+                    string upload = webRootPath + WC.ImagePath;
+                    string fileName = Guid.NewGuid().ToString();
+                    string extnsion = Path.GetExtension(files[0].FileName);
+                    var oldImage = Path.Combine(upload, objDB.Image);
+                    if(System.IO.File.Exists(oldImage))
+                    {
+                        System.IO.File.Delete(oldImage);
+                    }
+                    using (var fileStream = new FileStream(Path.Combine(upload, fileName + extnsion), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+                    obj.toy.Image= fileName + extnsion;
+                }
+                else
+                {
+                    obj.toy.Image = objDB.Image;
+                }
+                _db.Update(obj.toy);
+            }
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
