@@ -74,7 +74,9 @@ namespace Mark.Controllers
                 }
                 obj.toy.Image = fileName + extnsion;
                 _db.toys.Add(obj.toy);
-               
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+
             }
             else
             {
@@ -94,13 +96,48 @@ namespace Mark.Controllers
                         files[0].CopyTo(fileStream);
                     }
                     obj.toy.Image= fileName + extnsion;
+
                 }
                 else
                 {
                     obj.toy.Image = objDB.Image;
                 }
+
                 _db.Update(obj.toy);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
             }
+
+        }
+
+        //public IActionResult Delete(int? id)
+        //{
+        //    if (id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    Toy toy = _db.toys.Include(u=>u.CategoryId).FirstOrDefault(u=>u.Id==id);
+        //    if(toy == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(toy);
+
+        //}
+
+        public IActionResult Delete(int? id)
+        {
+            Toy toy = _db.toys.Find(id);
+            if(toy == null) {
+                return NotFound();
+            }
+            string upload = _webHostEnviroment.WebRootPath + WC.ImagePath;
+            var oldImage = Path.Combine(upload, toy.Image);
+            if (System.IO.File.Exists(oldImage))
+            {
+                System.IO.File.Delete(oldImage);
+            }
+            _db.toys.Remove(toy);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }

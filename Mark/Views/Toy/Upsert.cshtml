@@ -86,8 +86,11 @@
                 </div>
             </div>
             <div class="col-4 pt-4">
-                
-                <img src="@WC.ImagePath@Model.toy.Image" width="100%" style="border-radius:5px; border:1px solid:1px #bbb"
+                @if (Model.toy.Id != 0)
+                {
+                    <img src="@WC.ImagePath@Model.toy.Image" width="100%" style="border-radius:5px; border:1px solid:1px #bbb">
+                    
+                }
             </div>
         </div>
     </div>
