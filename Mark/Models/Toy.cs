@@ -13,6 +13,7 @@ namespace Mark.Models
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
+        public string shortDesc { get; set; }
         [Required]
         [Range(1,int.MaxValue)]
         public double Price { get; set; }
