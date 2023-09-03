@@ -39,6 +39,11 @@ namespace Mark.Controllers
             return View(details);
         }
 
+        public IActionResult Add_toy (int id)
+        {
+
+        }
+
         public IActionResult Privacy()
         {
             return View();
