@@ -16,7 +16,7 @@ namespace Mark.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            IEnumerable<Category>? list = _db.categories;
+            IEnumerable<Category> list = _db.categories;
             return View(list);
         }
 
@@ -73,7 +73,7 @@ namespace Mark.Controllers
             }
             _db.categories.Remove(_db.categories.Find(id));
             _db.SaveChanges();
-            return View("Index");
+            return RedirectToAction("Index");
         }
     }
 }

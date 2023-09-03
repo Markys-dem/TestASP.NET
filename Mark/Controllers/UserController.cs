@@ -1,4 +1,6 @@
 ﻿using Mark.Dao;
+using Mark.Models;
+using Mark.Models.ModelViews;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mark.Controllers
@@ -10,10 +12,35 @@ namespace Mark.Controllers
             _db = db;
         }
 
-        [HttpPost]
-        public ActionResult Login() {
-
+        public IActionResult Login() {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Registery (User obj)
+        {
+            _db.users.Add(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index","Home");
+        }
+
+        [HttpGet]
+        public IActionResult Registery_form()
+        {
+            return View();
+        }
+
+        public IActionResult Sing_In (UserVM user_vm)
+        {
+            WC.userd = _db.users.FirstOrDefault(u => u.Email == user_vm.Email && u.Password == user_vm.Password);
+            if (WC.userd != null) 
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return RedirectToAction("Login", "User");
+            }
         }
     }
 }

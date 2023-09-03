@@ -1,16 +1,24 @@
-﻿const loginForm = document.getElementById("login-form");
-const loginButton = document.getElementById("login-form-submit");
-const loginErrorMsg = document.getElementById("login-error-msg");
+﻿const container = document.querySelector(".container"),
+    pwShowHide = document.querySelectorAll(".showHidePw"),
+    pwFields = document.querySelectorAll(".password"),
 
-loginButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    const username = loginForm.username.value;
-    const password = loginForm.password.value;
+//   js code to show/hide password and change icon
+pwShowHide.forEach(eyeIcon => {
+    eyeIcon.addEventListener("click", () => {
+        pwFields.forEach(pwField => {
+            if (pwField.type === "password") {
+                pwField.type = "text";
 
-    if (username === "user" && password === "web_dev") {
-        alert("You have successfully logged in.");
-        location.reload();
-    } else {
-        loginErrorMsg.style.opacity = 1;
-    }
+                pwShowHide.forEach(icon => {
+                    icon.classList.replace("uil-eye-slash", "uil-eye");
+                })
+            } else {
+                pwField.type = "password";
+
+                pwShowHide.forEach(icon => {
+                    icon.classList.replace("uil-eye", "uil-eye-slash");
+                })
+            }
+        })
+    })
 })

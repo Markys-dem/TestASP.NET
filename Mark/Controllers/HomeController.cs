@@ -28,6 +28,17 @@ namespace Mark.Controllers
             return View(homeVm);
         }
 
+        public IActionResult Details(int id)
+        {
+            DetailsVM details = new DetailsVM()
+            {
+                Toy = _db.toys.Include(u => u.Category).Where(u => u.Id == id).FirstOrDefault(),
+                ExistsInCart = false
+            };
+
+            return View(details);
+        }
+
         public IActionResult Privacy()
         {
             return View();

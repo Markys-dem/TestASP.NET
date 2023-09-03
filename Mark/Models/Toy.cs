@@ -13,6 +13,7 @@ namespace Mark.Models
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
+        [Display(Name="Short Discription")]
         public string shortDesc { get; set; }
         [Required]
         [Range(1,int.MaxValue)]
@@ -22,5 +23,7 @@ namespace Mark.Models
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
+
+        public List<Basket> baskets { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using Mark.Dao;
+using Mark.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace Mark
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection")
                 ));
+            builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddAuthorization();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
@@ -30,12 +32,13 @@ namespace Mark
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=User}/{action=Login}");
 
             app.Run();
         }

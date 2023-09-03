@@ -1,7 +1,11 @@
-﻿namespace Mark
+﻿using Mark.Models;
+
+namespace Mark
 {
-    public class WC
+    public static class WC
     {
         public static string ImagePath = @"\image\toy\";
+        public static User? userd { get; set; }
+
     }
 }
