@@ -12,8 +12,29 @@ namespace Mark.Controllers
             _db = db;
         }
 
-        public IActionResult Login() {
+        public IActionResult Login()
+        {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Edit_User() {
+            if(WC.userd is null)
+            {
+                return View("Login", "User");
+            }
+            else
+            {
+                return View(WC.userd);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Edit_User(User user)
+        {
+            _db.users.Update(user);
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

@@ -38,7 +38,7 @@ namespace Mark
             app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=User}/{action=Login}");
+                pattern: "{controller=Home}/{action=Index}");
 
             app.Run();
         }
